@@ -3,5 +3,6 @@ all:
 	rm -rf /tmp/foxint-git
 	git clone https://github.com/Misterfoxapp/devops-test-foxintelligence.git /tmp/foxint-git
 	mv /tmp/foxint-git/frontend workdir
-	docker build -f ../Dockerfile.frontend --tag devops-test-foxintelligence-frontend:latest workdir
+	docker build -f ../Dockerfile.frontend --tag matchalunatic/foxfront:latest workdir
+	docker push matchalunatic/foxfront:latest
 	rm -rf workdir
