@@ -3,8 +3,32 @@ services:
     mongo:
         image: mongo
         restart: always
+        #environment:
+        #    MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+        #    MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
         environment:
-          MONGO_INITDB_ROOT_USERNAME: root
-          MONGO_INITDB_ROOT_PASSWORD: thisisbroken
+            MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+        env_file:
+            - .env_mongo
 
-    
+    front:
+        image: matchalunatic/foxfront:latest
+        restart: always
+        ports:
+            - "3000:3000"
+        environment:
+            BACKEND_URL: http://back:8080
+        deploy:
+            replicas: 2
+            endpoint_mode: dnsrr
+            
+
+    back:
+        image: matchalunatic/foxback:latest
+        restart: always
+        env_file:
+            - .env_back
+        deploy:
+            replicas: 2
+            endpoint_mode: dnsrr
