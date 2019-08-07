@@ -7,4 +7,5 @@ source /etc/ec2-tags
 
 export NODE_TYPE="${swarm_node_type}"
 export DYNAMODB_TABLE="swarm_locking_manager"
-docker run -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker -v /var/log:/var/log srikalyan/aws-swarm-init
+docker run -v /var/run/docker.sock:/var/run/docker.sock -v /home/ubuntu/join-swarm-entry.sh:/entry.sh -v /usr/bin/docker:/usr/bin/docker -v /var/log:/var/log -e REGION -e DYNAMODB_TABLE -e NODE_TYPE srikalyan/aws-swarm-init 
+

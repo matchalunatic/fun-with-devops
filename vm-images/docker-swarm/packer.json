@@ -32,14 +32,14 @@
          "type" : "shell",
          "inline" : [
             "sudo apt-get update",
-            "sudo apt-get install -y apt-transport-https ca-certificates nfs-common",
+            "sudo apt-get install -y apt-transport-https ca-certificates",
             "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
             "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\"",
             "sudo apt-get update",
             "ssh-keygen -N \"\" -t ed25519 -f ~/.ssh/docker-ed25519",
             "cat ~/.ssh/docker-ed25519 >> ~/.ssh/authorized_keys",
             "chmod 600 ~/.ssh/authorized_keys",
-            "sudo apt-get install -y docker-ce",
+            "sudo apt-get install -y docker-ce awscli",
             "sudo touch /lib/systemd/system/join-swarm.service /usr/local/bin/join-swarm.sh",
             "sudo chown ubuntu: /lib/systemd/system/join-swarm.service /usr/local/bin/join-swarm.sh",
             "echo 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFcpCFHqpadw9yP3Nf1gD+GyGFuemrAXkgXNLIRuaeVY' >> ~/.ssh/authorized_keys # my key, temporary"
@@ -56,10 +56,15 @@
          "type" : "file"
       },
       {
+         "source" : "entry.sh",
+         "destination" : "/home/ubuntu/join-swarm-entry.sh",
+         "type" : "file"
+      },
+      {
          "type" : "shell",
          "inline" : [
             "sudo chown root: /lib/systemd/system/join-swarm.service /usr/local/bin/join-swarm.sh",
-            "sudo chmod +x /usr/local/bin/join-swarm.sh",
+            "sudo chmod +x /usr/local/bin/join-swarm.sh /home/ubuntu/join-swarm-entry.sh",
             "sudo systemctl enable join-swarm.service"
          ]
       }
