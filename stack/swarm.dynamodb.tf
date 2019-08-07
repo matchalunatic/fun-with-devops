@@ -13,15 +13,15 @@ This is a clever and very minimal solution hence my implementation of it.
 */
 
 resource "aws_dynamodb_table" "swarm-locking-manager" {
-    name = "swarm_locking_manager"
-    billing_mode = "PROVISIONED"
-    read_capacity = 1
-    write_capacity = 1
-    hash_key = "node_type"
-    attribute {
-        type = "S"
-        name = "node_type"
-    }
+  name           = "swarm_locking_manager"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 1
+  write_capacity = 1
+  hash_key       = "node_type"
+  attribute {
+    type = "S"
+    name = "node_type"
+  }
 }
 
 
