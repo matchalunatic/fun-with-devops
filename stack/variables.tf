@@ -97,3 +97,7 @@ variable "managers_max" {
 variable "ssh-key-path" {
     default = "~/.ssh/docker-ed25519"
 }
+
+variable "ssh_key_name" {
+    description = "SSH key name for bastion / must be created otherwise"
+}

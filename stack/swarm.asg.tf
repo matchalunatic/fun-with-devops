@@ -1,5 +1,6 @@
 /* launch template: workers */
 resource "aws_launch_template" "lt_worker" {
+    key_name = var.ssh_key_name
     name_prefix = "workers-"
     image_id = var.swarm_ami
     instance_type = var.swarm_instance_type_wkr
@@ -34,6 +35,7 @@ resource "aws_autoscaling_group" "asg_workers" {
 
 /* launch template: managers */
 resource "aws_launch_template" "lt_manager" {
+    key_name = var.ssh_key_name
     name_prefix = "ds-mgr-"
     image_id = var.swarm_ami
     instance_type = var.swarm_instance_type_mgr
