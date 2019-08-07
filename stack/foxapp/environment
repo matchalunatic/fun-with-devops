@@ -1,0 +1,2 @@
+export FOXAPP_BACK_TAG="matchalunatic/foxback:latest"
+export FOXAPP_FRONT_TAG="matchalunatic/foxfront:latest"

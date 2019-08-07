@@ -3,7 +3,9 @@ WORKDIR /go/src/github.com/devops-test-foxintelligence/backend
 ADD .  /go/src/github.com/devops-test-foxintelligence/backend
 RUN apk add git
 RUN adduser -S -D -H -h /app luser
-RUN go get -u github.com/golang/dep/cmd/dep && dep ensure && go get && go build -o /app/main . && rm -rf /go
+# no longer needed, M fixed his app
+# RUN go get -u github.com/golang/dep/cmd/dep && dep ensure && go get && go build -o /app/main . && rm -rf /go
+RUN go get && go build -o /app/main . && rm -rf /go
 USER luser
 WORKDIR /app
 CMD ["./main"]

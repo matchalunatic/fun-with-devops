@@ -2,3 +2,5 @@ env.sh
 .pyc
 __pycache__
 .terraform
+*swp
+*~

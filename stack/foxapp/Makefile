@@ -4,4 +4,8 @@ back:
 front:
 	$(MAKE) -C frontend
 
-all: front back
+bundle:
+	docker-compose bundle
+	cp foxapp.dab ../stacks/
+
+all: front back bundle

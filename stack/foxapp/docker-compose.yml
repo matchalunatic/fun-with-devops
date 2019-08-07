@@ -6,9 +6,9 @@ services:
         #environment:
         #    MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
         #    MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+        #environment:
+        #    MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+        #    MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
         env_file:
             - .env_mongo
 
@@ -21,7 +21,6 @@ services:
             BACKEND_URL: http://back:8080
         deploy:
             replicas: 2
-            endpoint_mode: dnsrr
             
 
     back:
@@ -31,4 +30,3 @@ services:
             - .env_back
         deploy:
             replicas: 2
-            endpoint_mode: dnsrr
