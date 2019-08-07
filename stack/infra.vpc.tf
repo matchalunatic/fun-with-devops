@@ -9,9 +9,9 @@ resource "aws_vpc" "swarm_poc_vpc" {
 }
 
 resource "aws_route" "vpc_defroute" {
-  route_table_id         = "${aws_vpc.swarm_poc_vpc.default_route_table_id}"
+  route_table_id         = aws_vpc.swarm_poc_vpc.default_route_table_id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id             = "${aws_nat_gateway.nat_poc_gw.id}"
+  gateway_id             = aws_internet_gateway.poc_gw.id
 }
 
 
@@ -40,31 +40,16 @@ resource "aws_nat_gateway" "nat_poc_gw" {
 
 /* bastion, quick & dirty */
 
-resource "aws_s3_bucket" "bastion" {
-    bucket = "bastion"
-    acl = "private"
-}
 
-resource "aws_s3_bucket_object" "bastionkey" {
-    bucket = "${aws_s3_bucket.bastion.id}"
-    source = "/tmp/bastion.pem"
-    key = "bastion.pem"
-}
-
-
-module "bastion" {
-  source  = "telia-oss/bastion/aws"
-  version = "0.1.2"
-  # insert the 8 required variables here
-  name_prefix = "bastion"
-  vpc_id = "${aws_vpc.swarm_poc_vpc.id}"
-  subnet_ids = local.three_public_subnets
-  instance_type = "t2.micro"
-  pem_bucket = "${aws_s3_bucket.bastion.id}"
-  pem_path = "bastion.pem"
-  authorized_cidr = "163.172.128.35/32"
-  authorized_keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFcpCFHqpadw9yP3Nf1gD+GyGFuemrAXkgXNLIRuaeVY"]
-  instance_ami = "ami-06358f49b5839867c"
-  
-  depends_on = ["${aws_s3_bucket_object.bastionkey.id}"]
+module "ssh-bastion-service" {
+  source  = "joshuamkite/ssh-bastion-service/aws"
+  version = "5.0.0"
+  aws_region = "eu-west-1"
+  aws_profile = ""
+  environment_name = "bastion"
+  vpc = aws_vpc.swarm_poc_vpc.id
+  subnets_asg = local.three_public_subnets
+  subnets_lb = local.three_public_subnets
+  cidr_blocks_whitelist_service = ["85.68.24.103/32", "163.172.128.35/32"]
+  public_ip = true
 }
