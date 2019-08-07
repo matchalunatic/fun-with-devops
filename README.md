@@ -18,8 +18,6 @@ To be done:
 - proper startup call of a docker stack deployment of stack files stored in
 the S3 bucket (needs a script that does just that that would be call at
 start-up) => this goes for SSH-less auth
-- various tests (especially access from the Internet by the ELB)
-- add a real managed SSH bastion and not a bad hack / maybe something smarter that there is
 
 Cutoff reason: time is lacking.
 
@@ -29,6 +27,8 @@ Cutoff reason: time is lacking.
 
 1. Edit top-level env.sh (start with env.sh.dist) and set proper value
 2. Always run `source env.sh` before working on this project
+3. Create a user with a SSH key (Under IAM -> Users -> Security Credentials -> Upload SSH key) / this is for bastion use.
+4. Create an EC2 role instance under IAM with name EC2Description and strategy AmazonEC2ReadOnlyAccess
 
 ## Configure the Docker stack
 
@@ -65,10 +65,22 @@ Now you have the app images in your account. Time to create an AMI
    Minimal set is: 
      - `swarm_aws_region` (I use eu-west-1 for dev)
      - `swarm_ami` (defaultless variable, fill it in with the created AMI ID)
-3. Check that `foxapp.dab` is in the stacks/ directory (built in the Docker process,
-should never be versioned as it contains config information)
+3. ~~~Check that `foxapp.dab` is in the stacks/ directory (built in the Docker process,
+should never be versioned as it contains config information) -> This is not supported by current docker versions as it is still experimental.
+500. Before redeploying an updated AMI for the ASG, you must run ./reset-swarm.sh
+(this will clean-up the locking mechanism for Swarm creation)
+999. You have to run the terraform apply twice due to a bug in the AWS provider pertaining
+to module management.
 
-...FIXME: to be completed.
+...FIXME: to be completed for automated deployment of stacks.
+
+## Deploy the app
+
+1. Connect to the SSH bastion
+2. Connect to the manager node
+3. One way or another (git clone, tar + scp...), get `docker-compose.yml`,
+`.env_mongo` & `.env_back` on the manager node in a folder (say: foxapp)
+4. `cd foxapp; docker stack create -c docker-compose.yml foxapp`
 
 # An exercise
 
