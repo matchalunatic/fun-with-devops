@@ -1,37 +1,66 @@
 {
-  "builders": [{
-    "type": "amazon-ebs",
-    "access_key": "{{user `aws_access_key`}}",
-    "secret_key": "{{user `aws_secret_key`}}",
-    "region": "eu-west-1",
-    "ami_name": "chloe-bionic-swarm",
-    "ssh_username": "ubuntu",
-    "instance_type": "t2.micro",
-    "tags": {
-        "project": "foxint",
-        "role": "poc",
-        "os_version": "Ubuntu",
-        "os_release": "18.04"
-    },
-    "source_ami_filter": {
-      "filters": {
-        "virtualization-type": "hvm",
-        "name": "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
-        "root-device-type": "ebs"
+   "builders" : [
+      {
+         "ssh_username" : "ubuntu",
+         "type" : "amazon-ebs",
+         "source_ami_filter" : {
+            "filters" : {
+               "root-device-type" : "ebs",
+               "virtualization-type" : "hvm",
+               "name" : "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*"
+            },
+            "most_recent" : true,
+            "owners" : [
+               "099720109477"
+            ]
+         },
+         "secret_key" : "{{user `aws_secret_key`}}",
+         "access_key" : "{{user `aws_access_key`}}",
+         "tags" : {
+            "role" : "poc",
+            "os_release" : "18.04",
+            "os_version" : "Ubuntu",
+            "project" : "foxint"
+         },
+         "region" : "eu-west-1",
+         "ami_name" : "{{ user `swarm_image_name` }}",
+         "instance_type" : "t2.micro"
+      }
+   ],
+   "provisioners" : [
+      {
+         "type" : "shell",
+         "inline" : [
+            "sudo apt-get update",
+            "sudo apt-get install -y apt-transport-https ca-certificates nfs-common",
+            "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
+            "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\"",
+            "sudo apt-get update",
+            "ssh-keygen -N \"\" -t ed25519 -f ~/.ssh/docker-ed25519",
+            "cat ~/.ssh/docker-ed25519 >> ~/.ssh/authorized_keys",
+            "chmod 600 ~/.ssh/authorized_keys",
+            "sudo apt-get install -y docker-ce",
+            "sudo touch /lib/systemd/system/join-swarm.service /usr/local/bin/join-swarm.sh",
+            "sudo chown ubuntu: /lib/systemd/system/join-swarm.service /usr/local/bin/join-swarm.sh"
+         ]
       },
-      "owners": ["099720109477"],
-      "most_recent": true
-    }
-  }],
-  "provisioners": [{
-    "type": "shell",
-    "inline": [
-      "sudo apt-get update",
-      "sudo apt-get install -y apt-transport-https ca-certificates nfs-common",
-      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
-      "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\"",
-      "sudo apt-get update",
-      "sudo apt-get install -y docker-ce"
-    ]
-  }]
+      {
+         "source" : "join-swarm.service",
+         "destination" : "/lib/systemd/system/join-swarm.service",
+         "type" : "file"
+      },
+      {
+         "source" : "join-swarm.sh",
+         "destination" : "/usr/local/bin/join-swarm.sh",
+         "type" : "file"
+      },
+      {
+         "type" : "shell",
+         "inline" : [
+            "sudo chown root: /lib/systemd/system/join-swarm.service /usr/local/bin/join-swarm.sh",
+            "sudo chmod +x /usr/local/bin/join-swarm.sh",
+            "sudo systemctl enable join-swarm.service"
+         ]
+      }
+   ]
 }

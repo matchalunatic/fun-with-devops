@@ -1,0 +1,12 @@
+[Install]
+WantedBy=multi-user.target
+
+[Unit]
+Description=Automatically join a Docker Swarm
+Documentation=https://docs.docker.com
+BindsTo=containerd.service
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/join-swarm.sh
