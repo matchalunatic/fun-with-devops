@@ -47,8 +47,8 @@ resource "aws_security_group_rule" "accept_3000"{
     to_port = 3000
     protocol = "tcp"
     source_security_group_id = aws_security_group.fox-front-sg.id
-# cidr_blocks = ["0.0.0.0/0"]
 }
+
 resource "aws_security_group" "docker-swarm-worker-sg" {
   name = "swarm-worker-sg"
   description = "SG for Swarm Worker nodes"
