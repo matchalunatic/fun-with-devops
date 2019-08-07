@@ -18,43 +18,49 @@ resource "aws_security_group" "docker-swarm-worker-sg" {
     from_port = 2376
     to_port = 2376
     protocol = "tcp"
-    cidr_blocks = [var.swarm_mgrs_cidr_aza, var.swarm_mgrs_cidr_azb, var.swarm_mgrs_cidr_azc]
+    cidr_blocks = local.three_managers_cidr
   }
   ingress {
     from_port = 7946
     to_port = 7946
     protocol = "udp"
-    cidr_blocks = [var.swarm_mgrs_cidr_aza, var.swarm_mgrs_cidr_azb, var.swarm_mgrs_cidr_azc, var.swarm_wkrs_cidr_aza, var.swarm_wkrs_cidr_azb, var.swarm_wkrs_cidr_azc]
+    cidr_blocks = concat(local.three_managers_cidr, local.three_workers_cidr)
+#[ var.swarm_mgrs_cidr_az1, var.swarm_mgrs_cidr_az2, var.swarm_mgrs_cidr_az3, var.swarm_wkrs_cidr_az1, var.swarm_wkrs_cidr_az2, var.swarm_wkrs_cidr_az3]
   }
   egress {
     from_port = 7946
     to_port = 7946
     protocol = "udp"
-    cidr_blocks = [var.swarm_mgrs_cidr_aza, var.swarm_mgrs_cidr_azb, var.swarm_mgrs_cidr_azc, var.swarm_wkrs_cidr_aza, var.swarm_wkrs_cidr_azb, var.swarm_wkrs_cidr_azc]
+    cidr_blocks = concat(local.three_managers_cidr, local.three_workers_cidr)
+    # cidr_blocks = [var.swarm_mgrs_cidr_az1, var.swarm_mgrs_cidr_az2, var.swarm_mgrs_cidr_az3, var.swarm_wkrs_cidr_az1, var.swarm_wkrs_cidr_az2, var.swarm_wkrs_cidr_az3]
   }
   ingress {
     from_port = 7946
     to_port = 7946
     protocol = "tcp"
-    cidr_blocks = [var.swarm_mgrs_cidr_aza, var.swarm_mgrs_cidr_azb, var.swarm_mgrs_cidr_azc, var.swarm_wkrs_cidr_aza, var.swarm_wkrs_cidr_azb, var.swarm_wkrs_cidr_azc]
+    cidr_blocks = concat(local.three_managers_cidr, local.three_workers_cidr)
+    # cidr_blocks = [var.swarm_mgrs_cidr_az1, var.swarm_mgrs_cidr_az2, var.swarm_mgrs_cidr_az3, var.swarm_wkrs_cidr_az1, var.swarm_wkrs_cidr_az2, var.swarm_wkrs_cidr_az3]
   }
   egress {
     from_port = 7946
     to_port = 7946
     protocol = "tcp"
-    cidr_blocks = [var.swarm_mgrs_cidr_aza, var.swarm_mgrs_cidr_azb, var.swarm_mgrs_cidr_azc, var.swarm_wkrs_cidr_aza, var.swarm_wkrs_cidr_azb, var.swarm_wkrs_cidr_azc]
+    cidr_blocks = concat(local.three_managers_cidr, local.three_workers_cidr)
+    # cidr_blocks = [var.swarm_mgrs_cidr_az1, var.swarm_mgrs_cidr_az2, var.swarm_mgrs_cidr_az3, var.swarm_wkrs_cidr_az1, var.swarm_wkrs_cidr_az2, var.swarm_wkrs_cidr_az3]
   }
   ingress {
     from_port = 4789
     to_port = 4789
     protocol = "udp"
-    cidr_blocks = [var.swarm_mgrs_cidr_aza, var.swarm_mgrs_cidr_azb, var.swarm_mgrs_cidr_azc, var.swarm_wkrs_cidr_aza, var.swarm_wkrs_cidr_azb, var.swarm_wkrs_cidr_azc]
+    cidr_blocks = concat(local.three_managers_cidr, local.three_workers_cidr)
+    # cidr_blocks = [var.swarm_mgrs_cidr_az1, var.swarm_mgrs_cidr_az2, var.swarm_mgrs_cidr_az3, var.swarm_wkrs_cidr_az1, var.swarm_wkrs_cidr_az2, var.swarm_wkrs_cidr_az3]
   }
   egress {
     from_port = 4789
     to_port = 4789
     protocol = "udp"
-    cidr_blocks = [var.swarm_mgrs_cidr_aza, var.swarm_mgrs_cidr_azb, var.swarm_mgrs_cidr_azc, var.swarm_wkrs_cidr_aza, var.swarm_wkrs_cidr_azb, var.swarm_wkrs_cidr_azc]
+    cidr_blocks = concat(local.three_managers_cidr, local.three_workers_cidr)
+    # cidr_blocks = [var.swarm_mgrs_cidr_az1, var.swarm_mgrs_cidr_az2, var.swarm_mgrs_cidr_az3, var.swarm_wkrs_cidr_az1, var.swarm_wkrs_cidr_az2, var.swarm_wkrs_cidr_az3]
   }
 }
 
@@ -74,48 +80,56 @@ resource "aws_security_group" "docker-swarm-manager-sg" {
     from_port = 2376
     to_port = 2377
     protocol = "tcp"
-    cidr_blocks = [var.swarm_mgrs_cidr_aza, var.swarm_mgrs_cidr_azb, var.swarm_mgrs_cidr_azc]
+    cidr_blocks = local.three_managers_cidr
+    # cidr_blocks = [var.swarm_mgrs_cidr_az1, var.swarm_mgrs_cidr_az2, var.swarm_mgrs_cidr_az3]
   }
   egress {
     from_port = 2376
     to_port = 2377
     protocol = "tcp"
-    cidr_blocks = [var.swarm_mgrs_cidr_aza, var.swarm_mgrs_cidr_azb, var.swarm_mgrs_cidr_azc]
+    # cidr_blocks = [var.swarm_mgrs_cidr_az1, var.swarm_mgrs_cidr_az2, var.swarm_mgrs_cidr_az3]
+    cidr_blocks = local.three_managers_cidr
   }
   ingress {
     from_port = 7946
     to_port = 7946
     protocol = "udp"
-    cidr_blocks = [var.swarm_mgrs_cidr_aza, var.swarm_mgrs_cidr_azb, var.swarm_mgrs_cidr_azc, var.swarm_wkrs_cidr_aza, var.swarm_wkrs_cidr_azb, var.swarm_wkrs_cidr_azc]
+    cidr_blocks = concat(local.three_managers_cidr, local.three_workers_cidr)
+    # cidr_blocks = [var.swarm_mgrs_cidr_az1, var.swarm_mgrs_cidr_az2, var.swarm_mgrs_cidr_az3, var.swarm_wkrs_cidr_az1, var.swarm_wkrs_cidr_az2, var.swarm_wkrs_cidr_az3]
   }
   egress {
     from_port = 7946
     to_port = 7946
     protocol = "udp"
-    cidr_blocks = [var.swarm_mgrs_cidr_aza, var.swarm_mgrs_cidr_azb, var.swarm_mgrs_cidr_azc, var.swarm_wkrs_cidr_aza, var.swarm_wkrs_cidr_azb, var.swarm_wkrs_cidr_azc]
+    # cidr_blocks = [var.swarm_mgrs_cidr_az1, var.swarm_mgrs_cidr_az2, var.swarm_mgrs_cidr_az3, var.swarm_wkrs_cidr_az1, var.swarm_wkrs_cidr_az2, var.swarm_wkrs_cidr_az3]
+    cidr_blocks = concat(local.three_managers_cidr, local.three_workers_cidr)
   }
   ingress {
     from_port = 7946
     to_port = 7946
     protocol = "tcp"
-    cidr_blocks = [var.swarm_mgrs_cidr_aza, var.swarm_mgrs_cidr_azb, var.swarm_mgrs_cidr_azc, var.swarm_wkrs_cidr_aza, var.swarm_wkrs_cidr_azb, var.swarm_wkrs_cidr_azc]
+    # cidr_blocks = [var.swarm_mgrs_cidr_az1, var.swarm_mgrs_cidr_az2, var.swarm_mgrs_cidr_az3, var.swarm_wkrs_cidr_az1, var.swarm_wkrs_cidr_az2, var.swarm_wkrs_cidr_az3]
+    cidr_blocks = concat(local.three_managers_cidr, local.three_workers_cidr)
   }
   egress {
     from_port = 7946
     to_port = 7946
     protocol = "tcp"
-    cidr_blocks = [var.swarm_mgrs_cidr_aza, var.swarm_mgrs_cidr_azb, var.swarm_mgrs_cidr_azc, var.swarm_wkrs_cidr_aza, var.swarm_wkrs_cidr_azb, var.swarm_wkrs_cidr_azc]
+    # cidr_blocks = [var.swarm_mgrs_cidr_az1, var.swarm_mgrs_cidr_az2, var.swarm_mgrs_cidr_az3, var.swarm_wkrs_cidr_az1, var.swarm_wkrs_cidr_az2, var.swarm_wkrs_cidr_az3]
+    cidr_blocks = concat(local.three_managers_cidr, local.three_workers_cidr)
   }
   ingress {
     from_port = 4789
     to_port = 4789
     protocol = "udp"
-    cidr_blocks = [var.swarm_mgrs_cidr_aza, var.swarm_mgrs_cidr_azb, var.swarm_mgrs_cidr_azc, var.swarm_wkrs_cidr_aza, var.swarm_wkrs_cidr_azb, var.swarm_wkrs_cidr_azc]
+    # cidr_blocks = [var.swarm_mgrs_cidr_az1, var.swarm_mgrs_cidr_az2, var.swarm_mgrs_cidr_az3, var.swarm_wkrs_cidr_az1, var.swarm_wkrs_cidr_az2, var.swarm_wkrs_cidr_az3]
+    cidr_blocks = concat(local.three_managers_cidr, local.three_workers_cidr)
   }
   egress {
     from_port = 4789
     to_port = 4789
     protocol = "udp"
-    cidr_blocks = [var.swarm_mgrs_cidr_aza, var.swarm_mgrs_cidr_azb, var.swarm_mgrs_cidr_azc, var.swarm_wkrs_cidr_aza, var.swarm_wkrs_cidr_azb, var.swarm_wkrs_cidr_azc]
+    # cidr_blocks = [var.swarm_mgrs_cidr_az1, var.swarm_mgrs_cidr_az2, var.swarm_mgrs_cidr_az3, var.swarm_wkrs_cidr_az1, var.swarm_wkrs_cidr_az2, var.swarm_wkrs_cidr_az3]
+    cidr_blocks = concat(local.three_managers_cidr, local.three_workers_cidr)
   }
 }

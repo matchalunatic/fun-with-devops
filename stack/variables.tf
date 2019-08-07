@@ -2,11 +2,9 @@ variable "swarm_aws_region" {
     description = "AWS region for the Docker swarm"
     default = "eu-west-1"
 }
-
 variable "swarm_ami" {
-    /* (default is Ubuntu 18.04 + Docker on eu-west-1 as built here) */
     description = "AMI to use for Docker Swarm"
-    default = "ami-0fdaaadc99892a713"
+
 }
 
 variable "swarm_instance_type_mgr" {
@@ -24,16 +22,6 @@ variable "mongo_instance" {
     default = "t2.micro"
 }
 
-variable "swarm_common_ssh_key_path" {
-    description = "Path to SSH public key path"
-
-}
-
-variable "swarm_ssh_key_name" {
-    description = "Name for Docker key pair"
-    default = "swarm-key"
-}
-
 variable "bootstrap_script" {
     description = "Script for configuring a node inside the swarm"
     default = "install-docker-stuff.sh"
@@ -42,40 +30,52 @@ variable "bootstrap_script" {
 variable "vpc_cidr" {
     default = "172.23.0.0/16"
 }
-variable "mongo_subnet_aza_cidr" {
+variable "mongo_subnet_az1_cidr" {
     default = "172.23.10.0/24"
 }
 
-variable "mongo_subnet_azb_cidr" {
+variable "mongo_subnet_az2_cidr" {
     default = "172.23.11.0/24"
 }
 
-variable "mongo_subnet_azc_cidr" {
+variable "mongo_subnet_az3_cidr" {
     default = "172.23.12.0/24"
 }
 
-variable "swarm_wkrs_cidr_aza" {
+variable "swarm_wkrs_cidr_az1" {
     default = "172.23.20.0/24"
 }
 
-variable "swarm_wkrs_cidr_azb" {
+variable "swarm_wkrs_cidr_az2" {
     default = "172.23.21.0/24"
 }
 
-variable "swarm_wkrs_cidr_azc" {
+variable "swarm_wkrs_cidr_az3" {
     default = "172.23.22.0/24"
 }
 
-variable "swarm_mgrs_cidr_aza" {
+variable "swarm_mgrs_cidr_az1" {
     default = "172.23.30.0/24"
 }
 
-variable "swarm_mgrs_cidr_azb" {
+variable "swarm_mgrs_cidr_az2" {
     default = "172.23.31.0/24"
 }
 
-variable "swarm_mgrs_cidr_azc" {
+variable "swarm_mgrs_cidr_az3" {
     default = "172.23.32.0/24"
+}
+
+variable "swarm_public_az1" {
+    default = "172.23.50.0/24"
+}
+
+variable "swarm_public_az2" {
+    default = "172.23.51.0/24"
+}
+
+variable "swarm_public_az3" {
+    default = "172.23.52.0/24"
 }
 
 variable "workers_min" {
@@ -92,4 +92,8 @@ variable "managers_min" {
 
 variable "managers_max" {
     default = 3
+}
+
+variable "ssh-key-path" {
+    default = "~/.ssh/docker-ed25519"
 }

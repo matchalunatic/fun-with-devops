@@ -1,6 +1,6 @@
 resource "aws_elb" "public_app_access" {
     name = "fox-devops-frontend-elb"
-    availability_zones = local.three_azs
+#     availability_zones = local.three_azs
     # this is a public ELB
     internal = false
     listener {
@@ -23,6 +23,9 @@ resource "aws_elb" "public_app_access" {
     security_groups = [
         "${aws_security_group.fox-front-sg.id}"
     ]
+
+#    subnets = local.three_public_subnets
+    subnets = local.three_workers_subnets
 }
 
 /* glue between ELBs and ASGs */
