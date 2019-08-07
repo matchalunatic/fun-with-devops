@@ -10,7 +10,13 @@ resource "aws_security_group" "fox-front-sg" {
   ingress {
     from_port = 3000
     to_port = 3000
-    cidr_blocks = local.three_workers_cidr
+    cidr_blocks = ["0.0.0.0/0"]
+    protocol = "tcp"
+  }
+  egress {
+    from_port = 3000
+    to_port = 3000
+    security_groups = [aws_security_group.docker-swarm-worker-sg.id]
     protocol = "tcp"
   }
 }

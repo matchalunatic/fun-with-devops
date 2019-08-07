@@ -78,6 +78,18 @@ variable "swarm_public_az3" {
     default = "172.23.52.0/24"
 }
 
+variable "swarm_bastion_az1" {
+    default = "172.23.150.0/24"
+}
+
+variable "swarm_bastion_az2" {
+    default = "172.23.151.0/24"
+}
+
+variable "swarm_bastion_az3" {
+    default = "172.23.152.0/24"
+}
+
 variable "workers_min" {
     default = 1
 }

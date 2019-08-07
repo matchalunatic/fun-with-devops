@@ -1,13 +1,40 @@
+/* instance profile for ASG instances */
+data "aws_iam_policy_document" "instance-assume-role-policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_instance_profile" "readonlycaller" {
+    name = "readonlycaller"
+    role = aws_iam_role.ec2_description.name
+}
+
+resource "aws_iam_role" "ec2_description" {
+  name = "EC2Description"
+  path = "/"
+  assume_role_policy = "${data.aws_iam_policy_document.instance-assume-role-policy.json}"
+}
+
 /* launch template: workers */
 resource "aws_launch_template" "lt_worker" {
     key_name = var.ssh_key_name
     name_prefix = "workers-"
     image_id = var.swarm_ami
     instance_type = var.swarm_instance_type_wkr
+    iam_instance_profile {
+        name = aws_iam_instance_profile.readonlycaller.name
+    }
     network_interfaces {
       associate_public_ip_address = false
       security_groups =  [
-        "${aws_security_group.docker-swarm-worker-sg.id}"
+        "${aws_security_group.docker-swarm-worker-sg.id}",
+        "${aws_security_group.basic-server-access.id}"
     ]
     }
 }
@@ -39,9 +66,14 @@ resource "aws_launch_template" "lt_manager" {
     name_prefix = "ds-mgr-"
     image_id = var.swarm_ami
     instance_type = var.swarm_instance_type_mgr
+    iam_instance_profile {
+        name = aws_iam_instance_profile.readonlycaller.name
+    }
     network_interfaces {
       associate_public_ip_address = false
-      security_groups = ["${aws_security_group.docker-swarm-manager-sg.id}"]
+      security_groups = ["${aws_security_group.docker-swarm-manager-sg.id}",
+        "${aws_security_group.basic-server-access.id}"
+        ]
     }
 }
 
